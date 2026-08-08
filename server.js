@@ -1,12 +1,19 @@
-const connectDB = require("./config/db");
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const connectDB = require("./config/db");
+
 
 dotenv.config();
 connectDB();
 
 const promotionRoutes = require("./routes/promotionRoutes");
+const taskRoutes = require("./routes/taskRoutes");
+const userRoutes=require("./routes/userRoutes");
+const taskSubmissionRoutes = require("./routes/taskSubmissionRoutes");
+const settingsRoutes = require("./routes/settingsRoutes");
+
+
 
 const app = express();
 
@@ -23,6 +30,11 @@ app.get("/", (req, res) => {
 
 // API Version 1
 app.use("/api/v1/promotions", promotionRoutes);
+app.use("/api/v1/tasks", taskRoutes);
+app.use("/api/v1/users",userRoutes);
+app.use("/api/v1/submissions", taskSubmissionRoutes);
+app.use("/api/v1/settings", settingsRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 

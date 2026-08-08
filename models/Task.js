@@ -1,81 +1,79 @@
 const mongoose = require("mongoose");
 
-const taskSchema = new mongoose.Schema({
-
-    promotion:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Promotion",
-        required:true
+const taskSchema = new mongoose.Schema(
+  {
+    promotion: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Promotion",
+      required: true,
     },
 
-    title:{
-        type:String,
-        required:true
+    title: {
+      type: String,
+      required: true,
+      trim: true,
     },
 
-    description:{
-        type:String,
-        required:true
+    description: {
+      type: String,
+      required: true,
     },
 
-    platform:{
-        type:String,
-        enum:[
-            "Facebook",
-            "Instagram",
-            "X",
-            "TikTok",
-            "YouTube",
-            "Telegram",
-            "WhatsApp",
-            "LinkedIn"
-        ],
-        required:true
+    platform: {
+      type: String,
+      enum: [
+        "Facebook",
+        "Instagram",
+        "X",
+        "TikTok",
+        "YouTube",
+        "Telegram",
+        "WhatsApp",
+        "LinkedIn",
+      ],
+      required: true,
     },
 
-    action:{
-        type:String,
-        enum:[
-            "Share",
-            "Follow",
-            "Like",
-            "Comment",
-            "Join",
-            "Subscribe",
-            "Visit"
-        ],
-        required:true
+    action: {
+      type: String,
+      enum: [
+        "Share",
+        "Follow",
+        "Like",
+        "Comment",
+        "Join",
+        "Subscribe",
+        "Visit",
+      ],
+      required: true,
     },
 
-    rewardCoins:{
-        type:Number,
-        required:true
+    rewardCoins: {
+      type: Number,
+      required: true,
+      min: 1,
     },
 
-    targetLink:{
-        type:String,
-        required:true
+    targetLink: {
+      type: String,
+      required: true,
     },
 
-    proofType:{
-        type:String,
-        enum:[
-            "Screenshot",
-            "Post Link",
-            "Both"
-        ],
-        default:"Both"
+    proofType: {
+      type: String,
+      enum: ["Screenshot", "Post Link", "Both"],
+      default: "Both",
     },
 
-    status:{
-        type:String,
-        enum:[
-            "Active",
-            "Paused"
-        ],
-        default:"Active"
-    }
+    status: {
+      type: String,
+      enum: ["Active", "Paused"],
+      default: "Active",
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-},{timestamps:true});
-
-module.exports=mongoose.model("Task",taskSchema);
+module.exports = mongoose.model("Task", taskSchema);
