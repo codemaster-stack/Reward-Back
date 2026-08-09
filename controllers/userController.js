@@ -1,38 +1,58 @@
 const User = require("../models/User");
+const CurrencyConfig = require("../models/CurrencyConfig");
 const calculateCoinValue = require("../utils/calculateCoinValue");
 const generateGuestId = require("../utils/generateGuestId");
 
-exports.createGuest = async (req,res)=>{
+exports.createGuest = async (req, res) => {
+  try {
+    const { country } = req.body;
 
-try{
+    // Default country if none is provided
+    const selectedCountry = country || "Nigeria";
 
-const guest = await User.create({
+    // Find currency configuration
+    const currencyConfig = await CurrencyConfig.findOne({
+      country: selectedCountry,
+      active: true,
+    });
 
-guestId:generateGuestId()
+    if (!currencyConfig) {
+      return res.status(400).json({
+        success: false,
+        message: `Currency configuration not found for ${selectedCountry}`,
+      });
+    }
 
-});
+    // Generate guest ID
+    const guestId =
+      "GST-" +
+      Math.random().toString(36).substring(2, 10).toUpperCase();
 
-res.status(201).json({
+    const user = await User.create({
+      accountType: "guest",
+      guestId,
+      country: currencyConfig.country,
+      currency: currencyConfig.currency,
+      coinBalance: 0,
+      cashBalance: 0,
+      totalEarnedCoins: 0,
+      totalWithdrawn: 0,
+      withdrawalEligible: false,
+      status: "Active",
+    });
 
-success:true,
+    res.status(201).json({
+      success: true,
+      user,
+    });
 
-user:guest
-
-});
-
-}catch(error){
-
-res.status(500).json({
-
-success:false,
-
-message:error.message
-
-});
-
-}
-
-}
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 
 exports.getUserWallet = async (req, res) => {
