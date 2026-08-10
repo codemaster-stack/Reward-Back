@@ -34,3 +34,36 @@ exports.createPromotion = async (req, res) => {
     });
   }
 };
+
+
+exports.getPromotionById = async (req, res) => {
+    try {
+
+        const promotion =
+            await Promotion.findById(
+                req.params.promotionId
+            );
+
+        if (!promotion) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Promotion not found."
+            });
+
+        }
+
+        res.status(200).json({
+            success: true,
+            data: promotion
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+};
