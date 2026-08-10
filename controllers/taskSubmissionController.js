@@ -1,4 +1,6 @@
 const TaskSubmission = require("../models/TaskSubmission");
+const Transaction = require("../models/transactionModel");
+
 
 exports.createSubmission = async (req, res) => {
   try {
@@ -102,6 +104,23 @@ exports.approveSubmission = async (req, res) => {
 
     await user.save();
 
+    await Transaction.create({
+
+    user: user._id,
+
+    type: "Earning",
+
+    amount: rewardCoins,
+
+    description:
+        `${task.platform} ${task.action}`,
+
+    reference: submission._id,
+
+    status: "Completed"
+
+});
+
     // Update submission
     submission.status = "Approved";
     submission.reviewedBy = "Admin";
@@ -179,3 +198,5 @@ exports.rejectSubmission = async (req, res) => {
     });
   }
 };
+
+
